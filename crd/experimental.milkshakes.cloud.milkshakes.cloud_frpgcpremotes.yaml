@@ -1,0 +1,109 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: frpgcpremotes.experimental.milkshakes.cloud
+spec:
+  group: experimental.milkshakes.cloud
+  names:
+    kind: FrpGCPRemote
+    listKind: FrpGCPRemoteList
+    plural: frpgcpremotes
+    singular: frpgcpremote
+  scope: Namespaced
+  versions:
+  - name: v1
+    schema:
+      openAPIV3Schema:
+        description: FrpGCPRemote is the Schema for the frpgcpremotes API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: FrpGCPRemoteSpec defines the desired state of FrpGCPRemote
+            properties:
+              dns_a_name:
+                description: A record name for this service, ex. "my-service" if the
+                  full DNS name would be "my-service.my-zone.example.com"
+                type: string
+              dns_base_domain:
+                description: Base domain that the DNS zone sits on, ex. "example.com"
+                  if the full subdomain is "my-zone.example.com"
+                type: string
+              dns_zone:
+                description: DNS Zone configured in GCP, must match subdomain A name,
+                  ex. "my-zone" if the full subdomain is "my-zone.example.com"
+                type: string
+              frp_local_service_addr:
+                description: Addr of local service that FRP client will proxy connections
+                  to
+                type: string
+              frp_local_service_port:
+                description: Port of local service that FRP client will proxy connections
+                  to
+                maximum: 65535
+                minimum: 1
+                type: integer
+              frp_remote_port:
+                description: Port exposed by remote FRP instance
+                maximum: 65535
+                minimum: 1
+                type: integer
+              frp_server_port:
+                description: Port that remote FRP instance will listen for frp client
+                  connections on
+                maximum: 65535
+                minimum: 1
+                type: integer
+              gcp_project_id:
+                description: GCP Project ID that this will be created in (this will
+                  be moved to initial controller config in the future)
+                type: string
+              gcp_service_account_secret:
+                description: "The name of the secret containing a service-account.json file in the same namespace as this."
+                type: string
+            required:
+            - dns_a_name
+            - dns_base_domain
+            - dns_zone
+            - frp_local_service_addr
+            - frp_local_service_port
+            - frp_remote_port
+            - frp_server_port
+            - gcp_project_id
+            - gcp_service_account_secret
+            type: object
+          status:
+            description: FrpGCPRemoteStatus defines the observed state of FrpGCPRemote
+            properties:
+              active:
+                description: Shows values like "active", "provisioning", "error"
+                type: string
+              address:
+                description: IP Address remote proxy is listening on
+                type: string
+              dns_name:
+                description: Full DNS name for the remote proxy address
+                type: string
+              healthy:
+                description: Shows "healthy" or a related error as the result of health
+                  checks (soon tm)
+                type: string
+              provision_status:
+                description: Shows provisioning step or error, up to "complete"
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {name}
+spec:
+  template:
+    metadata:
+    spec:
+      volumes:
+      - name: secret-volume
+        secret:
+          secretName: {gcp_service_account_secret}
+      containers:
+      - image: ghcr.io/milkshak3s/frps-gcp-deployer:v1.0.0
+        name: {name}
+        volumeMounts:
+        - name: secret-volume
+          readOnly: true
+          mountPath: "/etc/gcp-sa"
+        env:
+        - name: GCP_PROJECT_ID
+          value: "{gcp_project_id}"
+        - name: DNS_A_NAME
+          value: "{dns_a_name}"
+        - name: DNS_ZONE
+          value: "{dns_zone}"
+        - name: DNS_BASE_DOMAIN
+          value: "{dns_base_domain}"
+        - name: FRP_SERVER_PORT
+          value: "{frp_server_port}"
+      restartPolicy: Never

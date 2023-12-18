@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {name}
+  name: {name}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {name}
+  template:
+    metadata:
+      labels:
+        app: {name}
+    spec:
+      containers:
+      - image: ghcr.io/milkshak3s/frpc:v1.0.0
+        name: {name}
+        env:
+        - name: FRP_SERVER_ADDR
+          value: "{frp_server_addr}"
+        - name: FRP_SERVER_PORT
+          value: "{frp_server_port}"
+        - name: FRP_LOCAL_SERVICE_ADDR
+          value: "{frp_local_service_addr}"
+        - name: FRP_LOCAL_SERVICE_PORT
+          value: "{frp_local_service_port}"
+        - name: FRP_REMOTE_PORT
+          value: "{frp_remote_port}"

@@ -1,0 +1,14 @@
+apiVersion: experimental.milkshakes.cloud/v1
+kind: FrpGCPRemote
+metadata:
+  name: test-frpgcp
+spec:
+  dns_a_name: "my-service"
+  dns_base_domain: "example.com"
+  dns_zone: "my-zone"
+  frp_local_service_addr: "10.108.19.149"
+  frp_local_service_port: 80
+  frp_remote_port: 80
+  frp_server_port: 1010
+  gcp_project_id: "my-gcp-cloud-proxy-project"
+  gcp_service_account_secret: "gcp-secret"
