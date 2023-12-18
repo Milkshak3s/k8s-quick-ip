@@ -28,4 +28,6 @@ spec:
           value: "{dns_base_domain}"
         - name: FRP_SERVER_PORT
           value: "{frp_server_port}"
+        - name: DELETE_NOT_CREATE
+          value: "{delete_not_create}"
       restartPolicy: Never
