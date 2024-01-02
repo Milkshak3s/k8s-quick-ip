@@ -135,4 +135,4 @@ def create_frpc_fn(meta, spec, namespace, logger, body, **kwargs):
         body=data,
     )
 
-    return {'FrpGCPRemote-job-name': obj.metadata.name}
+    return {'FrpClient-name': obj.metadata.name}
