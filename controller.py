@@ -106,3 +106,33 @@ def delete_fn(body, meta, spec, status, **kwargs):
     apps_api.delete_namespaced_deployment(name=generate_client_deploy_name(meta.get('name')), namespace=namespace)
 
     return {'FrpGCPRemote-delete-job-name': obj.metadata.name}
+
+
+@kopf.on.create('experimental.milkshakes.cloud', 'v1', 'frpclients')
+def create_frpc_fn(meta, spec, namespace, logger, body, **kwargs):
+    fields = ['frp_local_service_addr', 'frp_local_service_port', 'frp_remote_port', 'frp_server_port', 'frp_server_addr']
+    check_spec_fields(fields, spec)
+
+    client_deploy_name = generate_client_deploy_name(meta.get('name'))
+
+    frp_server_addr = spec.get('frp_server_addr')
+    frp_server_port = spec.get('frp_server_port')
+    frp_local_service_addr = spec.get('frp_local_service_addr')
+    frp_local_service_port = spec.get('frp_local_service_port')
+    frp_remote_port = spec.get('frp_remote_port')
+
+    path = os.path.join(os.path.dirname(__file__), 'client-deploy.yaml')
+    tmpl = open(path, 'rt').read()
+    text = tmpl.format(name=client_deploy_name, frp_server_addr=frp_server_addr, frp_server_port=frp_server_port, frp_local_service_addr=frp_local_service_addr, frp_local_service_port=frp_local_service_port, frp_remote_port=frp_remote_port)
+    data = yaml.load(text, yaml.Loader)
+
+    kopf.adopt(data, owner=body)
+
+    # run local client deployment
+    apps_api = kubernetes.client.AppsV1Api()
+    obj = apps_api.create_namespaced_deployment(
+        namespace=namespace,
+        body=data,
+    )
+
+    return {'FrpGCPRemote-job-name': obj.metadata.name}
