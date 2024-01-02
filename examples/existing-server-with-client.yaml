@@ -1,0 +1,20 @@
+apiVersion: experimental.milkshakes.cloud/v1
+kind: FrpServerReference
+metadata:
+  name: test-frpse
+spec:
+  frp_server_addr: "10.0.0.79"
+  frp_server_port: 1010
+  frp_endpoint_addr: "53.204.133.10"
+  frp_endpoint_dns: "au8d9sahf378.oceanview.milkshakes.cloud"
+---
+apiVersion: experimental.milkshakes.cloud/v1
+kind: FrpClient
+metadata:
+  name: test-frpc
+spec:
+  frp_local_service_addr: "10.108.19.149"
+  frp_local_service_port: 80
+  frp_remote_port: 80
+  frp_server_addr: "10.0.0.79"
+  frp_server_port: 1010

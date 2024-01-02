@@ -1,0 +1,76 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: frpclients.experimental.milkshakes.cloud
+spec:
+  group: experimental.milkshakes.cloud
+  names:
+    kind: FrpClient
+    listKind: FrpClientList
+    plural: frpclients
+    singular: frpclient
+  scope: Namespaced
+  versions:
+  - name: v1
+    schema:
+      openAPIV3Schema:
+        description: FrpClient is the Schema for the frpclients API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: FrpClientSpec defines the desired state of FrpClient
+            properties:
+              frp_local_service_addr:
+                description: Addr of local service that FRP client will proxy connections
+                  to
+                type: string
+              frp_local_service_port:
+                description: Port of local service that FRP client will proxy connections
+                  to
+                maximum: 65535
+                minimum: 1
+                type: integer
+              frp_remote_port:
+                description: Port exposed by remote FRP instance
+                maximum: 65535
+                minimum: 1
+                type: integer
+              frp_server_addr:
+                description: Addr that the FRP server is listening for frp client connections on
+                type: string
+              frp_server_port:
+                description: Port that the FRP server will listen for frp client connections on
+                maximum: 65535
+                minimum: 1
+                type: integer
+            required:
+            - frp_local_service_addr
+            - frp_local_service_port
+            - frp_remote_port
+            - frp_server_addr
+            - frp_server_port
+            type: object
+          status:
+            description: FrpClientStatus defines the observed state of FrpClient
+            properties:
+              healthy:
+                description: Shows "healthy" or a related error as the result of health
+                  checks (soon tm)
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
